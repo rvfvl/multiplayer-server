@@ -1,4 +1,5 @@
 import express from "express";
+import cors from "cors";
 import { createServer } from "http";
 import { Server } from "socket.io";
 import { SocketServer } from "../types/socket";
@@ -10,6 +11,19 @@ const io = new Server(httpServer, {
   cors: {
     origin: "http://localhost:3000",
   },
+});
+
+app.use(cors({ origin: "http://localhost:3000" }));
+app.use(express.json());
+
+app.post("/api/login", (req, res) => {
+  const { username, password } = req.body;
+  console.log(username, password, req.body);
+  if (username !== "test" || password !== "test") {
+    return res.status(401).json({ message: "Invalid username or password" });
+  }
+
+  return res.status(200).json({ success: true });
 });
 
 // io.use((socket, next) => {

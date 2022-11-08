@@ -1,5 +1,5 @@
 import { useEffect } from "react";
-import { socket } from "..";
+import { socket } from "../components/Game";
 
 const useSocket = (eventName?: string, handler?: (data?: any) => void) => {
   useEffect(() => {

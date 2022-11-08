@@ -1,6 +1,9 @@
 import { Canvas } from "@react-three/fiber";
-import React, { useRef, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
+import { io } from "socket.io-client";
 import AssetsLoader from "./AssetsLoader";
+
+export const socket = io("http://localhost:5000");
 
 type GameProps = {
   children: React.ReactNode;
@@ -13,8 +16,25 @@ export const GameContext = React.createContext({
 });
 
 const Game = ({ children }: GameProps) => {
+  const [establishedSocketConnection, setEstablishedSocketConnection] =
+    useState(false);
   const [componentRegistry, setComponentRegistry] = useState([]);
   const [currentMap, setCurrentMap] = useState("city");
+
+  useEffect(() => {
+    socket.on("connect_error", (err) => {
+      console.log(`connect_error due to ${err.message}`);
+    });
+
+    socket.on("connect", () => {
+      console.log("connected");
+      setEstablishedSocketConnection(true);
+    });
+
+    socket.on("disconnect", () => {
+      console.log("disconnected");
+    });
+  }, []);
 
   const registerComponent = (component: any) => {
     // @ts-ignore
@@ -40,6 +60,7 @@ const Game = ({ children }: GameProps) => {
             player: "./player.png",
             logo: "./logo512.png",
           }}
+          socketConnectionEstablished={establishedSocketConnection}
         >
           <ambientLight />
           {children}

@@ -3,9 +3,8 @@
     "outDir": "./dist",
     "esModuleInterop": true,
     "moduleResolution": "node",
-
     "strict": true
   },
-  "include": ["/**/*.ts"],
+  "include": ["/**/*.ts", "./src/"],
   "exclude": ["node_modules"]
 }
