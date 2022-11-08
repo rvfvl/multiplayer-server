@@ -12,6 +12,16 @@ const io = new Server(httpServer, {
   },
 });
 
+// io.use((socket, next) => {
+//   const { token } = socket.handshake.auth;
+//   console.log(token);
+//   if (token) {
+//     return next();
+//   }
+
+//   return next(new Error("authentication error"));
+// });
+
 const gameServer = new GameServer(io);
 gameServer.start();
 

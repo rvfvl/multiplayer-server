@@ -1,8 +1,9 @@
 import { useEffect, useRef } from "react";
 import useGame from "../hooks/useGame";
 import useSocket from "../hooks/useSocket";
-import SpriteRefactored from "./SpriteRefactored";
+import Sprite from "./Sprite";
 import anime from "animejs";
+import { useFrame } from "@react-three/fiber";
 
 const HORIZONTAL_FRAMES = 3;
 const VERTICAL_FRAMES = 4;
@@ -117,8 +118,19 @@ const Player = () => {
     emitEvent("player:startMove", { direction });
   };
 
+  useFrame(({ camera }) => {
+    // @ts-ignore
+    camera.lookAt(
+      // @ts-ignore
+      componentRegistry[0].position.x,
+      // @ts-ignore
+      componentRegistry[0].position.y,
+      0
+    );
+  });
+
   return (
-    <SpriteRefactored
+    <Sprite
       assetPath="./player.png"
       horizontalFrames={HORIZONTAL_FRAMES}
       verticalFrames={VERTICAL_FRAMES}

@@ -12,6 +12,8 @@ class Player {
   };
   public faceDirection = "down";
 
+  private time = 0;
+
   constructor(socket: Socket) {
     this.socket = socket;
     this.id = socket.id;
