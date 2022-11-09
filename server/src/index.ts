@@ -1,30 +1,26 @@
+import * as dotenv from "dotenv";
+dotenv.config();
 import express from "express";
 import cors from "cors";
 import { createServer } from "http";
 import { Server } from "socket.io";
-import { SocketServer } from "../types/socket";
-import GameServer from "./services/GameServer";
+import GameServer from "./game/services/GameServer";
+import authRouter from "./routes/auth";
+
+const corsObject = {
+  origin: "http://localhost:3000",
+};
 
 const app = express();
 const httpServer = createServer(app);
 const io = new Server(httpServer, {
-  cors: {
-    origin: "http://localhost:3000",
-  },
+  cors: corsObject,
 });
 
-app.use(cors({ origin: "http://localhost:3000" }));
+app.use(cors(corsObject));
 app.use(express.json());
 
-app.post("/api/login", (req, res) => {
-  const { username, password } = req.body;
-  console.log(username, password, req.body);
-  if (username !== "test" || password !== "test") {
-    return res.status(401).json({ message: "Invalid username or password" });
-  }
-
-  return res.status(200).json({ success: true });
-});
+app.use("/api/auth", authRouter);
 
 // io.use((socket, next) => {
 //   const { token } = socket.handshake.auth;
@@ -35,6 +31,8 @@ app.post("/api/login", (req, res) => {
 
 //   return next(new Error("authentication error"));
 // });
+
+console.log("test");
 
 const gameServer = new GameServer(io);
 gameServer.start();

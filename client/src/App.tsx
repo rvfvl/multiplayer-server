@@ -3,8 +3,10 @@ import {
   createBrowserRouter,
   redirect,
 } from "react-router-dom";
-import GamePage from "./pages/GamePage";
-import LoginPage from "./pages/LoginPage";
+import ErrorPage from "./routes/error";
+import GameWindow from "./routes/game";
+import HomePage from "./routes/home";
+import LoginPage from "./routes/Login";
 import "./styles.scss";
 
 const login = async () => {
@@ -27,7 +29,13 @@ const login = async () => {
 const router = createBrowserRouter([
   {
     path: "/",
-    element: <GamePage />,
+    element: <HomePage />,
+    errorElement: <ErrorPage />,
+  },
+  {
+    path: "/game",
+    element: <GameWindow />,
+    errorElement: <ErrorPage />,
     loader: async () => {
       const data = await login();
 
@@ -41,6 +49,9 @@ const router = createBrowserRouter([
   {
     path: "/login",
     element: <LoginPage />,
+    action: ({ params, request }) => {
+      console.log(params, request, "sending action");
+    },
   },
 ]);
 

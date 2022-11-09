@@ -3,7 +3,7 @@ import React, { useEffect, useRef, useState } from "react";
 import { io } from "socket.io-client";
 import AssetsLoader from "./AssetsLoader";
 
-export const socket = io("http://localhost:5000");
+export const socket = io("http://localhost:5000", { autoConnect: false });
 
 type GameProps = {
   children: React.ReactNode;
@@ -22,6 +22,8 @@ const Game = ({ children }: GameProps) => {
   const [currentMap, setCurrentMap] = useState("city");
 
   useEffect(() => {
+    socket.connect();
+
     socket.on("connect_error", (err) => {
       console.log(`connect_error due to ${err.message}`);
     });
@@ -34,6 +36,12 @@ const Game = ({ children }: GameProps) => {
     socket.on("disconnect", () => {
       console.log("disconnected");
     });
+
+    return () => {
+      socket.off("connect_error");
+      socket.off("connect");
+      socket.off("disconnect");
+    };
   }, []);
 
   const registerComponent = (component: any) => {
@@ -59,6 +67,7 @@ const Game = ({ children }: GameProps) => {
           assets={{
             player: "./player.png",
             logo: "./logo512.png",
+            back: "./assets/Untitled.png",
           }}
           socketConnectionEstablished={establishedSocketConnection}
         >

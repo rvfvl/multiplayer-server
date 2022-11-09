@@ -17,7 +17,7 @@ const AssetsLoader = ({
   const textures = useTexture(assets);
   const { progress } = useProgress();
 
-  console.log("textures", textures);
+  console.log("textures", textures, progress, socketConnectionEstablished);
 
   if (progress < 100 || !socketConnectionEstablished) {
     return (

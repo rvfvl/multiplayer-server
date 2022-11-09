@@ -21,7 +21,7 @@ const Sprite = ({
 
   console.log("textures", assets);
   //@ts-ignore
-  const clone = useMemo(() => assets.player.clone(), [assets.player]);
+  const clone = useMemo(() => assets.back.clone(), [assets.back]);
   const spriteRef = useRef<THREESprite>(null);
   const { registerComponent, unregisterComponent } = useGame();
 
@@ -48,8 +48,13 @@ const Sprite = ({
   }, []);
 
   return (
-    <sprite ref={spriteRef} dispose={null}>
-      <spriteMaterial map={clone} />
+    <sprite
+      ref={spriteRef}
+      dispose={null}
+      position={[Math.random() * 10, Math.random() * 10, 0]}
+    >
+      {/* @ts-ignore */}
+      <spriteMaterial map={assets.back} />
     </sprite>
   );
 };
