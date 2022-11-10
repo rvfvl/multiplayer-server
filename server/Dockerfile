@@ -8,6 +8,8 @@ RUN npm install
 
 COPY . .
 
+ENV SECRET_KEY=test123
+
 FROM base as production
 
 RUN npm run build

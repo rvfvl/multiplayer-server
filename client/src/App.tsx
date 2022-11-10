@@ -2,29 +2,14 @@ import {
   RouterProvider,
   createBrowserRouter,
   redirect,
+  Navigate,
 } from "react-router-dom";
+import { isLogged } from "./routes/common/loaders";
 import ErrorPage from "./routes/error";
 import GameWindow from "./routes/game";
 import HomePage from "./routes/home";
-import LoginPage from "./routes/Login";
+import LoginPage, { loginAction } from "./routes/loginPage";
 import "./styles.scss";
-
-const login = async () => {
-  const response = await fetch("http://localhost:5000/api/login", {
-    method: "POST",
-    body: JSON.stringify({
-      username: "test",
-      password: "test",
-    }),
-    headers: {
-      "Content-Type": "application/json",
-    },
-  });
-
-  const data = await response.json();
-
-  return data;
-};
 
 const router = createBrowserRouter([
   {
@@ -35,23 +20,13 @@ const router = createBrowserRouter([
   {
     path: "/game",
     element: <GameWindow />,
-    errorElement: <ErrorPage />,
-    loader: async () => {
-      const data = await login();
-
-      if (!data.success) {
-        return redirect("/login");
-      }
-
-      return data;
-    },
+    loader: isLogged,
   },
   {
     path: "/login",
     element: <LoginPage />,
-    action: ({ params, request }) => {
-      console.log(params, request, "sending action");
-    },
+    loader: isLogged,
+    action: loginAction,
   },
 ]);
 
