@@ -1,15 +1,21 @@
 import { Server, Socket } from "socket.io";
 import Player from "../entities/Player";
+import MapLoader from "./Loader";
 
 class GameManager {
   public players: Player[] = [];
-  private io: Server;
-
-  constructor(io: Server) {
-    this.io = io;
-  }
 
   public addPlayer = (socket: Socket) => {
+    const oldConnection = this.players.find(
+      (player) => player.socket.data.username === socket.data.username
+    );
+
+    // If the player is already connected, remove the old connection
+    if (oldConnection) {
+      oldConnection.socket.disconnect();
+      this.removePlayer(oldConnection.id);
+    }
+
     this.players.push(new Player(socket));
   };
 

@@ -1,9 +1,14 @@
 import { Canvas } from "@react-three/fiber";
-import React, { useEffect, useRef, useState } from "react";
+import React, { useEffect, useState } from "react";
 import { io } from "socket.io-client";
 import AssetsLoader from "./AssetsLoader";
 
-export const socket = io("http://localhost:5000", { autoConnect: false });
+export const socket = io("http://localhost:5000", {
+  autoConnect: false,
+  auth: {
+    token: `Bearer ${localStorage.getItem("accessToken")}` ?? "",
+  },
+});
 
 type GameProps = {
   children: React.ReactNode;

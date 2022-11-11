@@ -1,25 +1,32 @@
 import { Server } from "socket.io";
+import logger from "../../libs/logger";
 import GameManager from "./GameManager";
+import Loader from "./Loader";
 
 class GameServer {
   private gameManager: GameManager;
   private io: Server;
 
   constructor(io: Server) {
-    this.gameManager = new GameManager(io);
+    Loader.loadGameObjects();
+    this.gameManager = new GameManager();
     this.io = io;
-
-    this.onPlayerConnect();
   }
 
   private onPlayerConnect = () => {
     this.io.on("connection", (socket) => {
+      logger.info("Player connected", {
+        username: socket.data.username,
+        id: socket.id,
+      });
       this.gameManager.addPlayer(socket);
-      console.log("a user connected", socket.id);
 
       socket.on("disconnect", () => {
+        logger.info("Player disconnected", {
+          username: socket.data.username,
+          id: socket.id,
+        });
         this.gameManager.removePlayer(socket.id);
-        console.log("user disconnected", socket.id);
       });
     });
   };
@@ -28,10 +35,17 @@ class GameServer {
     this.gameManager.updatePlayerPositions();
   };
 
-  public start = () => {
-    setInterval(() => {
-      this.Update();
-    }, 1000 / 3);
+  public start = async () => {
+    try {
+      this.onPlayerConnect();
+
+      setInterval(() => {
+        this.Update();
+      }, 1000 / 3);
+    } catch (error) {
+      // @ts-ignore
+      logger.error(error.message);
+    }
   };
 }
 
