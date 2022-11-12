@@ -1,7 +1,12 @@
-class MapManager {
-  private registeredMaps = [];
+import { loadMapsData } from "../../utils/maps-loader";
+import MapInstance, { MapData } from "../entities/MapInstance";
 
-  constructor() {}
+class MapManager {
+  private registeredMaps: MapInstance[] = [];
+
+  constructor() {
+    this.registeredMaps = loadMapsData().map((map) => new MapInstance(map));
+  }
 }
 
 export default MapManager;

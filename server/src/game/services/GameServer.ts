@@ -23,7 +23,7 @@ class GameServer {
 
       this.gameIntervalId = setInterval(() => {
         this.Update();
-      }, 1000);
+      }, 3000);
     } catch (error) {
       // @ts-ignore
       logger.error(error.message);
@@ -37,15 +37,17 @@ class GameServer {
         id: socket.id,
       });
 
-      const playerData = await this.getConnectedPlayerData();
+      const playerData = await this.getConnectedPlayerData(
+        socket.data.username
+      );
 
-      if (!playerData) {
+      if (!playerData?.[0]) {
         logger.error(`Player data not found for ${socket.data.username}`);
         socket.disconnect(true);
         return;
       }
 
-      this.gameManager.addPlayer(socket);
+      this.gameManager.addPlayer(socket, playerData[0]);
 
       socket.on("disconnect", () => {
         logger.info("Player disconnected", {
@@ -62,9 +64,9 @@ class GameServer {
     this.gameManager.updatePlayerPositions();
   };
 
-  private getConnectedPlayerData = async () => {
+  private getConnectedPlayerData = async (username: string) => {
     try {
-      const user = await User.find({ username: "test" }).lean();
+      const user = await User.find({ username }).lean();
 
       return user;
     } catch (error) {
