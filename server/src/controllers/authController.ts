@@ -16,7 +16,6 @@ const login = async (req: Request, res: Response) => {
   }
 
   const tempUser = {
-    id: 1,
     username: "admin",
   };
 

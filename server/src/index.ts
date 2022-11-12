@@ -6,10 +6,10 @@ import { createServer } from "http";
 import { Server } from "socket.io";
 import GameServer from "./game/services/GameServer";
 import authRouter from "./routes/auth";
-import connectDb from "./libs/connectDb";
+import connectDb from "./utils/connectDb";
 import mongoose from "mongoose";
 import jwt from "jsonwebtoken";
-import logger from "./libs/logger";
+import logger from "./utils/logger";
 
 const corsObject: CorsOptions = {
   origin: "http://localhost:3000",
