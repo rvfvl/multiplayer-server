@@ -41,32 +41,32 @@ class GameServer {
         socket.data.username
       );
 
-      if (!playerData?.[0]) {
+      if (!playerData) {
         logger.error(`Player data not found for ${socket.data.username}`);
         socket.disconnect(true);
         return;
       }
 
-      this.gameManager.addPlayer(socket, playerData[0]);
+      this.gameManager.allocateNewPlayerConnection(socket, playerData);
 
       socket.on("disconnect", () => {
         logger.info("Player disconnected", {
           username: socket.data.username,
           id: socket.id,
         });
-        this.gameManager.removePlayer(socket.id);
+        this.gameManager.cleanupPlayerConnection(socket.data.username);
       });
     });
   };
 
   private Update = () => {
     console.log(this.gameManager);
-    this.gameManager.updatePlayerPositions();
+    //this.gameManager.emitPlayerPositions();
   };
 
   private getConnectedPlayerData = async (username: string) => {
     try {
-      const user = await User.find({ username }).lean();
+      const user = (await User.find({ username }).lean()).shift();
 
       return user;
     } catch (error) {
