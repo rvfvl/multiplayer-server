@@ -5,6 +5,12 @@ import Player from "../entities/Player";
 import MapManager from "./MapManager";
 
 class GameManager {
+  private io: Server;
+
+  constructor(io: Server) {
+    this.io = io;
+  }
+
   private mapManager = new MapManager();
 
   public allocateNewPlayerConnection = (socket: Socket, playerData: IUser) => {

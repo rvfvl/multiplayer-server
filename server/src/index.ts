@@ -1,5 +1,5 @@
 import * as dotenv from "dotenv";
-dotenv.config();
+dotenv.config({ path: ".env.local" });
 import express from "express";
 import cors, { CorsOptions } from "cors";
 import { createServer } from "http";
@@ -33,7 +33,7 @@ io.use((socket, next) => {
   try {
     const { token } = socket.handshake.auth;
     const accessToken = token.split(" ")[1];
-    const user = jwt.verify(accessToken, process.env.SECRET_KEY!);
+    const user = jwt.verify(accessToken, process.env.JWT_SECRET!);
 
     if (user) {
       // @ts-ignore

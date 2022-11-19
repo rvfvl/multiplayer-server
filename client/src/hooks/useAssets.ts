@@ -1,5 +1,5 @@
 import { useContext } from "react";
-import { AssetsContext } from "../components/AssetsLoader";
+import { AssetsContext } from "../modules/AssetsLoader/AssetsLoader";
 
 const useAsset = () => {
   const context = useContext(AssetsContext);

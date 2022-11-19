@@ -1,5 +1,5 @@
 import { useEffect, useRef } from "react";
-import useGame from "../hooks/useGame";
+
 import useSocket from "../hooks/useSocket";
 import Sprite from "./Sprite";
 import anime from "animejs";
@@ -10,45 +10,45 @@ const VERTICAL_FRAMES = 4;
 
 const Player = () => {
   const currentFrame = useRef(0);
-  const { componentRegistry } = useGame();
-  const { emitEvent } = useSocket(
-    "player:position",
-    ({ position, faceDirection }) => {
-      anime({
-        // @ts-ignore
-        targets: componentRegistry[0].position,
-        x: position.x,
-        y: position.y,
-        duration: 1000 / 3,
-        easing: "linear",
-        update: (anim) => {
-          const frameIndexes = {
-            up: [0, 1, 2],
-            left: [9, 10, 11],
-            down: [6, 7, 8],
-            right: [3, 4, 5],
-          };
+  //const { componentRegistry } = useGame();
+  // const { emitEvent } = useSocket(
+  //   "player:position",
+  //   ({ position, faceDirection }) => {
+  //     anime({
+  //       // @ts-ignore
+  //       targets: componentRegistry[0].position,
+  //       x: position.x,
+  //       y: position.y,
+  //       duration: 1000 / 3,
+  //       easing: "linear",
+  //       update: (anim) => {
+  //         const frameIndexes = {
+  //           up: [0, 1, 2],
+  //           left: [9, 10, 11],
+  //           down: [6, 7, 8],
+  //           right: [3, 4, 5],
+  //         };
 
-          if (Math.floor(anim.progress) % 14 === 0) {
-            currentFrame.current += 1;
-          }
-          // @ts-ignore
-          const frameIndex =
-            // @ts-ignore
-            frameIndexes[faceDirection][
-              anim.progress < 100 ? currentFrame.current % HORIZONTAL_FRAMES : 1
-            ];
+  //         if (Math.floor(anim.progress) % 14 === 0) {
+  //           currentFrame.current += 1;
+  //         }
+  //         // @ts-ignore
+  //         const frameIndex =
+  //           // @ts-ignore
+  //           frameIndexes[faceDirection][
+  //             anim.progress < 100 ? currentFrame.current % HORIZONTAL_FRAMES : 1
+  //           ];
 
-          // @ts-ignore
-          componentRegistry[0].material.map.offset.set(
-            (frameIndex % HORIZONTAL_FRAMES) / HORIZONTAL_FRAMES,
-            (VERTICAL_FRAMES - Math.floor(frameIndex / HORIZONTAL_FRAMES) - 1) /
-              VERTICAL_FRAMES
-          );
-        },
-      });
-    }
-  );
+  //         // @ts-ignore
+  //         componentRegistry[0].material.map.offset.set(
+  //           (frameIndex % HORIZONTAL_FRAMES) / HORIZONTAL_FRAMES,
+  //           (VERTICAL_FRAMES - Math.floor(frameIndex / HORIZONTAL_FRAMES) - 1) /
+  //             VERTICAL_FRAMES
+  //         );
+  //       },
+  //     });
+  //   }
+  // );
 
   useEffect(() => {
     document.addEventListener("keydown", emitPlayerStartMove);
@@ -102,7 +102,7 @@ const Player = () => {
 
       const direction = getDirectionFromKey(event.key);
 
-      emitEvent("player:stopMove", { direction });
+      //emitEvent("player:stopMove", { direction });
     }
   };
 
@@ -115,7 +115,7 @@ const Player = () => {
 
     console.log("start move", direction);
 
-    emitEvent("player:startMove", { direction });
+    //emitEvent("player:startMove", { direction });
   };
 
   useFrame(({ camera }) => {

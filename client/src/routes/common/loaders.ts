@@ -16,6 +16,7 @@ export const isLogged = async ({ request }: LoaderFunctionArgs) => {
 
     return user;
   } catch (error) {
+    console.log("ERROR", error);
     if (!isLoginRoute) {
       throw redirect("/login");
     }

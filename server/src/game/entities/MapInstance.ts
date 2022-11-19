@@ -24,7 +24,10 @@ class MapInstance {
     this.players.push(new Player(socket, playerData, this));
 
     // Sends initial map data to the player.
-    socket.emit("map:load", this.mapData);
+    socket.emit("map:load", {
+      map: this.mapData,
+      player: playerData,
+    });
   };
 
   public removePlayer = (username: string) => {

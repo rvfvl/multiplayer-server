@@ -19,7 +19,7 @@ export const protectedRoute = (
   }
 
   try {
-    const user = jwt.verify(token, process.env.SECRET_KEY!);
+    const user = jwt.verify(token, process.env.JWT_SECRET!);
 
     if (!user) {
       return res.status(401).json({ message: "Unable to find a user." });

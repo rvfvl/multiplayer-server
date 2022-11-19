@@ -3,9 +3,7 @@ import logger from "./logger";
 
 export default async () => {
   try {
-    await mongoose.connect(
-      "mongodb://root:example@mongo:27017/valart?authSource=admin"
-    );
+    await mongoose.connect("mongodb://localhost:27017/valart?authSource=admin");
   } catch (error) {
     // @ts-ignore
     logger.error(error.message);

@@ -9,7 +9,7 @@ class GameServer {
   private gameIntervalId: NodeJS.Timeout | null = null;
 
   constructor(io: Server) {
-    this.gameManager = new GameManager();
+    this.gameManager = new GameManager(io);
     this.io = io;
   }
 

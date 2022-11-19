@@ -1,25 +1,23 @@
+import { Html, useProgress, useTexture } from "@react-three/drei";
 import React from "react";
-import { useTexture, useProgress, Html } from "@react-three/drei";
 
 type AssetsLoaderProps = {
-  socketConnectionEstablished: boolean;
-  assets: Record<string, string>;
   children: React.ReactNode;
+  isSocketConnectionEstablished: boolean;
+  assets: Record<string, string>;
 };
 
 export const AssetsContext = React.createContext({});
 
-const AssetsLoader = ({
+export const AssetsLoader = ({
   children,
+  isSocketConnectionEstablished,
   assets,
-  socketConnectionEstablished,
 }: AssetsLoaderProps) => {
   const textures = useTexture(assets);
   const { progress } = useProgress();
 
-  console.log("textures", textures, progress, socketConnectionEstablished);
-
-  if (progress < 100 || !socketConnectionEstablished) {
+  if (progress < 100 || !isSocketConnectionEstablished) {
     return (
       <Html
         fullscreen
@@ -35,9 +33,9 @@ const AssetsLoader = ({
     );
   }
 
+  console.log(textures);
+
   return (
     <AssetsContext.Provider value={textures}>{children}</AssetsContext.Provider>
   );
 };
-
-export default AssetsLoader;
