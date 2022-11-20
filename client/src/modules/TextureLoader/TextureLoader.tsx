@@ -1,20 +1,20 @@
 import { Html, useProgress, useTexture } from "@react-three/drei";
 import React from "react";
 
-type AssetsLoaderProps = {
+type TextureLoaderProps = {
   children: React.ReactNode;
   isSocketConnectionEstablished: boolean;
-  assets: Record<string, string>;
+  textures: Record<string, string>;
 };
 
-export const AssetsContext = React.createContext({});
+export const TextureContext = React.createContext({});
 
-export const AssetsLoader = ({
+export const TextureLoader = ({
   children,
   isSocketConnectionEstablished,
-  assets,
-}: AssetsLoaderProps) => {
-  const textures = useTexture(assets);
+  textures,
+}: TextureLoaderProps) => {
+  const loadedTextures = useTexture(textures);
   const { progress } = useProgress();
 
   if (progress < 100 || !isSocketConnectionEstablished) {
@@ -33,9 +33,9 @@ export const AssetsLoader = ({
     );
   }
 
-  console.log(textures);
-
   return (
-    <AssetsContext.Provider value={textures}>{children}</AssetsContext.Provider>
+    <TextureContext.Provider value={loadedTextures}>
+      {children}
+    </TextureContext.Provider>
   );
 };

@@ -1,10 +1,19 @@
-import React from "react";
-import { useGameStore } from "../GameLoader/GameLoader";
+import Sprite from "../../components/Sprite";
+import useGameComponent from "../../hooks/useGameComponent";
+import useTexture from "../../hooks/useTexture";
+import Player from "../Player/Player";
 
 const LocationMap = () => {
-  console.log(useGameStore()[0]);
+  const { getTexture } = useTexture();
+  const { gameComponents } = useGameComponent();
+  console.log("gameComponents", gameComponents);
 
-  return <></>;
+  return (
+    <>
+      <Sprite spriteKey="map" texture={getTexture("map")} scale={[96, 64, 0]} />
+      <Player />
+    </>
+  );
 };
 
 export default LocationMap;

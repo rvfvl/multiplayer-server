@@ -1,52 +1,58 @@
-import { useLoader } from "@react-three/fiber";
-import { useLayoutEffect, useMemo, useRef } from "react";
-import { NearestFilter, Sprite as THREESprite, TextureLoader } from "three";
-import useAsset from "../hooks/useAssets";
+import { useEffect, useLayoutEffect, useMemo } from "react";
+import { NearestFilter, RepeatWrapping, Texture as ThreeTexture } from "three";
+import { componentsStore } from "../modules/GameLoader/GameLoader";
 
 type SpriteProps = {
-  assetPath: string;
+  spriteKey: string;
+  texture: ThreeTexture;
   horizontalFrames?: number;
   verticalFrames?: number;
   frameIndex?: number;
+  scale?: [number, number, number];
 };
 
 const Sprite = ({
-  assetPath,
+  spriteKey,
+  texture,
   horizontalFrames = 1,
   verticalFrames = 1,
   frameIndex = 0,
+  scale,
 }: SpriteProps) => {
-  const assets = useAsset();
-
-  //@ts-ignore
-  const clone = useMemo(() => assets.map.clone(), [assets.map]);
-  const spriteRef = useRef<THREESprite>(null);
-  //const { registerComponent, unregisterComponent } = useGame();
+  const clone = useMemo(() => {
+    console.log("cloning!!!");
+    return texture.clone();
+  }, [texture]);
 
   useLayoutEffect(() => {
-    const sprite = spriteRef.current;
+    clone.minFilter = NearestFilter;
+    clone.magFilter = NearestFilter;
+    clone.wrapS = RepeatWrapping;
+    clone.wrapT = RepeatWrapping;
 
-    // if (sprite && sprite.material && sprite.material.map) {
-    //   sprite.material.map.repeat.set(1 / horizontalFrames, 1 / verticalFrames);
+    clone.repeat.set(1 / horizontalFrames, 1 / verticalFrames);
+    clone.offset.set(
+      (frameIndex % horizontalFrames) / horizontalFrames,
+      (verticalFrames - Math.floor(frameIndex / horizontalFrames) - 1) /
+        verticalFrames
+    );
+  }, []);
 
-    //   sprite.material.map.offset.set(
-    //     (frameIndex % horizontalFrames) / horizontalFrames,
-    //     (verticalFrames - Math.floor(frameIndex / horizontalFrames) - 1) /
-    //       verticalFrames
-    //   );
+  useEffect(() => {
+    componentsStore.setState((prev) => [
+      ...prev,
+      { name: spriteKey, component: clone },
+    ]);
 
-    //   sprite.material.map.magFilter = NearestFilter;
-    // }
-
-    //registerComponent(sprite);
-
-    // return () => {
-    //   unregisterComponent(sprite);
-    // };
+    return () => {
+      componentsStore.setState((prev) =>
+        prev.filter((c) => c.name !== spriteKey)
+      );
+    };
   }, []);
 
   return (
-    <sprite ref={spriteRef} scale={[96, 64, 1]}>
+    <sprite scale={scale}>
       <spriteMaterial map={clone} />
     </sprite>
   );

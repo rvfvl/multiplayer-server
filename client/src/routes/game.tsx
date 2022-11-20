@@ -2,7 +2,6 @@ import { useLoaderData } from "react-router-dom";
 
 import Player from "../components/Player";
 import useWindowResize from "../hooks/useWindowResize";
-import Map from "../components/Map";
 import Sprite from "../components/Sprite";
 import { GameLoader } from "../modules/GameLoader/GameLoader";
 import LocationMap from "../modules/LocationMap/LocationMap";
@@ -27,6 +26,7 @@ const GameWindow = () => {
       </div> */}
       <GameLoader>
         <LocationMap />
+        {/* HUD */}
       </GameLoader>
     </div>
   );

@@ -129,13 +129,14 @@ const Player = () => {
     );
   });
 
-  return (
-    <Sprite
-      assetPath="./player.png"
-      horizontalFrames={HORIZONTAL_FRAMES}
-      verticalFrames={VERTICAL_FRAMES}
-    />
-  );
+  return null;
+  // return (
+  //   <Sprite
+  //     assetPath="./player.png"
+  //     horizontalFrames={HORIZONTAL_FRAMES}
+  //     verticalFrames={VERTICAL_FRAMES}
+  //   />
+  // );
 };
 
 export default Player;

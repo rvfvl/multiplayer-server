@@ -1,19 +1,25 @@
 import { Canvas } from "@react-three/fiber";
 import { useEffect, useState } from "react";
+import { Texture } from "three";
 import { socket } from "../../libs/socket";
 import createStore from "../../libs/store";
-import { AssetsLoader } from "../AssetsLoader/AssetsLoader";
+import { TextureLoader } from "../TextureLoader/TextureLoader";
 
 type GameLoaderProps = {
   children: React.ReactNode;
 };
 
-export const useGameStore = createStore({ test: 1 });
+export const gameStore = createStore({ map: null, player: null });
+export const componentsStore = createStore<
+  {
+    name: string;
+    component: Texture;
+  }[]
+>([]);
 
 export const GameLoader = ({ children }: GameLoaderProps) => {
   const [isSocketConnectionEstablished, setisSocketConnectionEstablished] =
     useState(false);
-  const [state, setState] = useGameStore();
 
   useEffect(() => {
     socket.connect();
@@ -32,8 +38,8 @@ export const GameLoader = ({ children }: GameLoaderProps) => {
       setisSocketConnectionEstablished(false);
     });
 
-    socket.on("map:load", (d) => {
-      setState({ test: 2 });
+    socket.on("map:load", (data) => {
+      gameStore.setState((prev) => ({ ...prev, data }));
     });
 
     return () => {
@@ -47,16 +53,16 @@ export const GameLoader = ({ children }: GameLoaderProps) => {
     <>
       <Canvas orthographic camera={{ zoom: 32, position: [0, 0, 32] }}>
         <ambientLight intensity={1} />
-        <AssetsLoader
+        <TextureLoader
           isSocketConnectionEstablished={isSocketConnectionEstablished}
-          assets={{ map: "./assets/ruiny-szabrownikow.png" }}
+          textures={{
+            map: "./assets/ruiny-szabrownikow.png",
+            player: "./player.png",
+          }}
         >
           {children}
-        </AssetsLoader>
+        </TextureLoader>
       </Canvas>
-      <button onClick={() => setState({ ...state, test: state.test + 1 })}>
-        SIEMA
-      </button>
     </>
   );
 };
